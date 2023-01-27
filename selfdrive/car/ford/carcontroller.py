@@ -53,7 +53,7 @@ class CarController:
 
       self.apply_curvature_last = apply_curvature
       can_sends.append(create_lka_msg(self.packer))
-      can_sends.append(create_lat_ctl_msg(self.packer, CC.latActive, 0., 0., -apply_curvature, 0.))
+      can_sends.append(create_lat_ctl_msg(self.packer, CC.latActive, -apply_curvature, CS.lateral_motion_control))
 
     ### ui ###
     send_ui = (self.main_on_last != main_on) or (self.lkas_enabled_last != CC.latActive) or (self.steer_alert_last != steer_alert)

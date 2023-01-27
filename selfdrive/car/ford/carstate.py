@@ -1,3 +1,4 @@
+import copy
 from cereal import car
 from common.conversions import Conversions as CV
 from opendbc.can.can_define import CANDefine
@@ -18,6 +19,8 @@ class CarState(CarStateBase):
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
+
+    self.lateral_motion_control = copy.copy(cp.vl["LateralMotionControl"])
 
     # car speed
     ret.vEgoRaw = cp.vl["BrakeSysFeatures"]["Veh_V_ActlBrk"] * CV.KPH_TO_MS
@@ -150,6 +153,16 @@ class CarState(CarStateBase):
       ("AccButtnGapTogglePress", "Steering_Data_FD1"),
       ("WiprFrontSwtch_D_Stat", "Steering_Data_FD1"),
       ("HeadLghtHiCtrl_D_RqAhb", "Steering_Data_FD1"),
+
+      ("LatCtlRng_L_Max", "LateralMotionControl"),
+      ("HandsOffCnfm_B_Rq", "LateralMotionControl"),
+      ("LatCtl_D_Rq", "LateralMotionControl"),
+      ("LatCtlRampType_D_Rq", "LateralMotionControl"),
+      ("LatCtlPrecision_D_Rq", "LateralMotionControl"),
+      ("LatCtlPathOffst_L_Actl", "LateralMotionControl"),
+      ("LatCtlPath_An_Actl", "LateralMotionControl"),
+      ("LatCtlCurv_NoRate_Actl", "LateralMotionControl"),
+      ("LatCtlCurv_No_Actl", "LateralMotionControl"),
     ]
 
     checks = [
