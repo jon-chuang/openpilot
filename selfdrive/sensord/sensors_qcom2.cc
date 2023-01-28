@@ -156,7 +156,7 @@ int sensor_loop(I2CBus *i2c_bus_imu) {
 
   if (!has_magnetometer) {
     LOGE("No magnetometer present");
-    return -1;
+    //return -1;
   }
 
   // increase interrupt quality by pinning interrupt and process to core 1
