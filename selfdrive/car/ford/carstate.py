@@ -85,6 +85,8 @@ class CarState(CarStateBase):
     # Stock values from IPMA so that we can retain some stock functionality
     self.acc_tja_status_stock_values = cp_cam.vl["ACCDATA_3"]
     self.lkas_status_stock_values = cp_cam.vl["IPMA_Data"]
+    # Stock lane centering message
+    self.latctl_stock_values = cp_cam.vl["LateralMotionControl"]
 
     return ret
 
@@ -244,6 +246,15 @@ class CarState(CarStateBase):
       ("AhbHiBeam_D_Rq", "IPMA_Data"),              # AHB status
       ("Passthru_63", "IPMA_Data"),
       ("Passthru_48", "IPMA_Data"),
+      ("LatCtlRng_L_Max", "LateralMotionControl"),  # Lane centering stock values
+      ("HandsOffCnfm_B_Rq", "LateralMotionControl"),
+      ("LatCtl_D_Rq", "LateralMotionControl"),
+      ("LatCtlRampType_D_Rq", "LateralMotionControl"),
+      ("LatCtlPrecision_D_Rq", "LateralMotionControl"),
+      ("LatCtlPathOffst_L_Actl", "LateralMotionControl"),
+      ("LatCtlPath_An_Actl", "LateralMotionControl"),
+      ("LatCtlCurv_NoRate_Actl", "LateralMotionControl"),
+      ("LatCtlCurv_No_Actl", "LateralMotionControl"),
     ]
 
     checks = [

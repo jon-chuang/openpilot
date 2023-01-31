@@ -1,10 +1,9 @@
 from cereal import car
 from common.numpy_fast import clip
 from opendbc.can.packer import CANPacker
-from selfdrive.car import apply_std_steer_angle_limits
 from selfdrive.car.ford.fordcan import create_acc_command, create_acc_ui_msg, create_button_msg, create_lat_ctl_msg, \
-  create_lat_ctl2_msg, create_lka_msg, create_lkas_ui_msg
-from selfdrive.car.ford.values import CANBUS, CANFD_CARS, CarControllerParams
+  create_lka_msg, create_lkas_ui_msg
+from selfdrive.car.ford.values import CANBUS, CarControllerParams
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
@@ -16,7 +15,6 @@ class CarController:
     self.packer = CANPacker(dbc_name)
     self.frame = 0
 
-    self.apply_curvature_last = 0
     self.main_on_last = False
     self.lkas_enabled_last = False
     self.steer_alert_last = False
@@ -45,23 +43,8 @@ class CarController:
     ### lateral control ###
     # send steering commands at 20Hz
     if (self.frame % CarControllerParams.STEER_STEP) == 0:
-      if CC.latActive:
-        # apply limits to curvature and clip to signal range
-        apply_curvature = apply_std_steer_angle_limits(actuators.curvature, self.apply_curvature_last, CS.out.vEgo, CarControllerParams)
-        apply_curvature = clip(apply_curvature, -CarControllerParams.CURVATURE_MAX, CarControllerParams.CURVATURE_MAX)
-      else:
-        apply_curvature = 0.
-
-      self.apply_curvature_last = apply_curvature
       can_sends.append(create_lka_msg(self.packer))
-
-      if self.CP.carFingerprint in CANFD_CARS:
-        # TODO: extended mode
-        mode = 1 if CC.latActive else 0
-        counter = self.frame // CarControllerParams.STEER_STEP
-        can_sends.append(create_lat_ctl2_msg(self.packer, mode, 0., 0., -apply_curvature, 0., counter))
-      else:
-        can_sends.append(create_lat_ctl_msg(self.packer, CC.latActive, 0., 0., -apply_curvature, 0.))
+      can_sends.append(create_lat_ctl_msg(self.packer, CC.latActive, CS.latctl_stock_values))
 
     ### longitudinal control ###
     # send acc command at 50Hz
