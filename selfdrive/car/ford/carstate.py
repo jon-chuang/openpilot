@@ -261,6 +261,7 @@ class CarState(CarStateBase):
       # sig_address, frequency
       ("ACCDATA_3", 5),
       ("IPMA_Data", 1),
+      ("LateralMotionControl", 20),
     ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, CANBUS.camera)
