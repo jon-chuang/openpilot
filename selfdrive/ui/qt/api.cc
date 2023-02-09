@@ -94,9 +94,10 @@ void HttpRequest::sendRequest(const QString &requestURL, const HttpRequest::Meth
   QNetworkRequest request;
   request.setUrl(QUrl(requestURL));
   request.setRawHeader("User-Agent", getUserAgent().toUtf8());
+  request.setRawHeader("X-openpilot-serial", Hardware::get_serial().c_str());
 
   if (!token.isEmpty()) {
-    request.setRawHeader(QByteArray("Authorization"), ("JWT " + token).toUtf8());
+    request.setRawHeader("Authorization", ("JWT " + token).toUtf8());
   }
 
   if (method == HttpRequest::Method::GET) {
