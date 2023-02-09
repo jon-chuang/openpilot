@@ -23,10 +23,10 @@ class HttpRequest : public QObject {
   Q_OBJECT
 
 public:
-  enum class Method {GET, DELETE};
+  enum class Method {GET, POST, DELETE};
 
   explicit HttpRequest(QObject* parent, bool create_jwt = true, int timeout = 20000);
-  void sendRequest(const QString &requestURL, const Method method = Method::GET);
+  void sendRequest(const QString &requestURL, const Method method = Method::GET, const QJsonObject *body = nullptr);
   bool active() const;
   bool timeout() const;
 

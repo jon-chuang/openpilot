@@ -77,7 +77,7 @@ bool HttpRequest::timeout() const {
   return reply && reply->error() == QNetworkReply::OperationCanceledError;
 }
 
-void HttpRequest::sendRequest(const QString &requestURL, const HttpRequest::Method method) {
+void HttpRequest::sendRequest(const QString &requestURL, const HttpRequest::Method method, const QJsonObject *body) {
   if (active()) {
     qDebug() << "HttpRequest is active";
     return;
@@ -101,6 +101,9 @@ void HttpRequest::sendRequest(const QString &requestURL, const HttpRequest::Meth
 
   if (method == HttpRequest::Method::GET) {
     reply = nam()->get(request);
+  } else if (method == HttpRequest::Method::POST) {
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    reply = nam()->post(request, QJsonDocument(*body).toJson());
   } else if (method == HttpRequest::Method::DELETE) {
     reply = nam()->deleteResource(request);
   }
